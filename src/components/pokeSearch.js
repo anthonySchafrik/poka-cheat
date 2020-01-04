@@ -28,6 +28,11 @@ class PokeSearch extends Component {
 
     const { data } = pokeData;
 
+    if (data === 'Some error check your spelling') {
+      alert(data);
+      return;
+    }
+
     this.setState({ pokemon: data });
   };
 

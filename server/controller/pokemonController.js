@@ -10,7 +10,13 @@ const fetchData = async pokemon => {
     stats: []
   };
 
-  const result = await axios.get(`${pokemonBackUp}/${pokemon}/`);
+  let result;
+
+  try {
+    result = await axios.get(`${pokemonBackUp}/${pokemon}/`);
+  } catch (error) {
+    return 'Some error check your spelling';
+  }
 
   const $ = cheerio.load(result.data);
 
