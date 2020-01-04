@@ -15,15 +15,42 @@ const fetchData = async pokemon => {
 
   const $ = cheerio.load(result.data);
 
-  // console.log(
-  //   cheerio.html($('.fooinfo')).split(' ')
-  //   // $('td[class=fooinfo]').html()
-  // );
-
+  const stat = cheerio.html($('.fooinfo')).split(' ');
   const type = cheerio.html($('.typeimg')).split(' ');
 
+  const htmlFilter = stat.filter(x => {
+    const start = x.indexOf('>');
+    const end = x.indexOf('<');
+    const t = x.slice(0, start + 1);
+    const y = x.slice(end);
+
+    if (t === 'class="fooinfo">' && y === '</td><td') {
+      return x;
+    }
+  });
+
+  const htmlStats = htmlFilter.slice(Math.max(htmlFilter.length - 6, 1));
+
+  const Stats = htmlStats.map(x => {
+    const start = x.indexOf('>');
+    const end = x.indexOf('<');
+
+    const stat = x.slice(start + 1, end);
+
+    return stat;
+  });
+
+  pokemonPackage.stats = [
+    { stat: 'hp', base: Stats[0] },
+    { stat: 'attack', base: Stats[1] },
+    { stat: 'defense', base: Stats[2] },
+    { stat: 'special-attack', base: Stats[3] },
+    { stat: 'special-defense', base: Stats[4] },
+    { stat: 'speed', base: Stats[5] }
+  ];
+
   type.forEach(x => {
-    const { types, stats } = pokemonPackage;
+    const { types } = pokemonPackage;
 
     let type;
     const findAlt = x.slice(0, 3);
