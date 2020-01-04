@@ -1,9 +1,11 @@
 import React from 'react';
 
+import PokeSearch from './components/pokeSearch';
+
 const App = () => {
   return (
     <>
-      <div>poka-cheat coming soon</div>
+      <PokeSearch />
     </>
   );
 };
