@@ -4,7 +4,7 @@ import axios from 'axios';
 class PokeSearch extends Component {
   state = {
     pokemonName: '',
-    pokemon: {}
+    pokemon: { types: [], stats: [] }
   };
 
   handleChange = e => {
@@ -13,14 +13,28 @@ class PokeSearch extends Component {
     this.setState({ [name]: value });
   };
 
-  fetchPokemon = () => {
+  fetchPokemon = async () => {
     const { pokemonName } = this.state;
 
-    axios.get(`/api/v1/pokemon?pokemon=${pokemonName.toLowerCase()}`);
+    let pokeData;
+
+    try {
+      pokeData = await axios.get(
+        `/api/v1/pokemon?pokemon=${pokemonName.toLowerCase()}`
+      );
+    } catch (error) {
+      alert(error.data);
+    }
+
+    const { data } = pokeData;
+
+    this.setState({ pokemon: data });
   };
 
   render = () => {
     const { handleChange, fetchPokemon } = this;
+    const { types, stats } = this.state.pokemon;
+
     return (
       <>
         <div>
@@ -36,6 +50,27 @@ class PokeSearch extends Component {
             placeholder="Enter pokemon name"
           />
           <button onClick={fetchPokemon}>Search</button>
+        </div>
+
+        <div>
+          <h3>Types</h3>
+          {types.map((type, i) => {
+            return <div key={i}>{type}</div>;
+          })}
+        </div>
+
+        <div>
+          <h3>Base stats</h3>
+
+          {stats.map((x, i) => {
+            const { stat, base } = x;
+            return (
+              <div key={i}>
+                <div>{stat}</div>
+                <div>{base}</div>
+              </div>
+            );
+          })}
         </div>
       </>
     );
