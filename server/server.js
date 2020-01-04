@@ -5,9 +5,13 @@ const path = require('path');
 const log = require('./utils').log;
 
 const app = express();
-let port = 2020;
+const port = process.env.port;
+
+const pokemonRoute = require('./routes/pokemonRoute');
 
 const apiBase = '/api/v1';
+
+app.use(apiBase, pokemonRoute);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
