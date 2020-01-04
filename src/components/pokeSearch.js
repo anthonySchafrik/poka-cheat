@@ -70,7 +70,7 @@ class PokeSearch extends Component {
           {stats.map((x, i) => {
             const { stat, base } = x;
             return (
-              <div key={i}>
+              <div style={{ marginTop: '2vh' }} key={i}>
                 <div>{stat}</div>
                 <div>{base}</div>
               </div>
