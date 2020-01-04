@@ -16,7 +16,7 @@ class PokeSearch extends Component {
   fetchPokemon = () => {
     const { pokemonName } = this.state;
 
-    axios.get(`/api/v1/pokemon?pokemon=${pokemonName}`);
+    axios.get(`/api/v1/pokemon?pokemon=${pokemonName.toLowerCase()}`);
   };
 
   render = () => {
