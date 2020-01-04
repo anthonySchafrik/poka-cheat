@@ -2,7 +2,6 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 
 const pokemonApi = 'https://pokeapi.co/api/v2/pokemon/';
-
 const pokemonBackUp = 'https://www.serebii.net/pokedex-swsh/';
 
 const fetchData = async pokemon => {
@@ -21,10 +20,10 @@ const fetchData = async pokemon => {
   const htmlFilter = stat.filter(x => {
     const start = x.indexOf('>');
     const end = x.indexOf('<');
-    const t = x.slice(0, start + 1);
-    const y = x.slice(end);
+    const s = x.slice(0, start + 1);
+    const e = x.slice(end);
 
-    if (t === 'class="fooinfo">' && y === '</td><td') {
+    if (s === 'class="fooinfo">' && e === '</td><td') {
       return x;
     }
   });
@@ -65,12 +64,13 @@ const fetchData = async pokemon => {
       }
     }
   });
-  console.log(pokemonPackage);
+
+  return pokemonPackage;
 };
 
 module.exports.fetchPokemon = async (req, res) => {
   const { pokemon } = req.query;
-  const pokemonPackage = {
+  let pokemonPackage = {
     types: [],
     stats: []
   };
@@ -95,11 +95,11 @@ module.exports.fetchPokemon = async (req, res) => {
       pokemonPackage.stats.push({ stat: name, base: base_stat });
     });
   } catch (error) {
-    const { status } = error.response;
-    console.log(error.response);
+    const { status, statusText } = error.response;
+    console.log(statusText);
 
     if (status === 404) {
-      fetchData(pokemon);
+      pokemonPackage = await fetchData(pokemon);
     }
   }
 
