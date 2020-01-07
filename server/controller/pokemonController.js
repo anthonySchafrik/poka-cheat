@@ -102,6 +102,7 @@ module.exports.fetchPokemon = async (req, res) => {
     });
   } catch (error) {
     const { status, statusText } = error.response;
+
     console.log(statusText);
 
     if (status === 404) {
